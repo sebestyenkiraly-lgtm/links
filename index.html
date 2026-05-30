@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strong by Habit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #00695C;
+    --teal-light: #E1F5EE;
+    --teal-mid: #0F6E56;
+    --teal-dark: #085041;
+    --text: #1a1a1a;
+    --text-muted: #5a5a5a;
+    --bg: #f7f6f2;
+    --card-bg: #ffffff;
+    --border: rgba(0,0,0,0.08);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 1.25rem 4rem;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .logo-mark {
+    width: 64px;
+    height: 64px;
+    background: var(--teal);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  .logo-mark svg {
+    width: 32px;
+    height: 32px;
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .brand-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.75rem;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+    text-align: center;
+  }
+
+  .tagline {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 2.5rem;
+    line-height: 1.5;
+  }
+
+  .links {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .link-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    text-decoration: none;
+    color: var(--text);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    cursor: pointer;
+  }
+
+  .link-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    border-color: rgba(0,105,92,0.25);
+  }
+
+  .link-card:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  .link-card.primary {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: #ffffff;
+  }
+
+  .link-card.primary:hover {
+    background: var(--teal-mid);
+    border-color: var(--teal-mid);
+    box-shadow: 0 6px 20px rgba(0,105,92,0.3);
+  }
+
+  .icon-wrap {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .link-card.primary .icon-wrap {
+    background: rgba(255,255,255,0.2);
+  }
+
+  .icon-wrap svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--teal);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .link-card.primary .icon-wrap svg {
+    stroke: #ffffff;
+  }
+
+  .link-text {
+    flex: 1;
+  }
+
+  .link-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .link-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .link-card.primary .link-sub {
+    color: rgba(255,255,255,0.7);
+  }
+
+  .arrow {
+    flex-shrink: 0;
+    opacity: 0.35;
+  }
+
+  .link-card.primary .arrow {
+    opacity: 0.6;
+  }
+
+  .arrow svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+    margin: 0.5rem 0;
+  }
+
+  .footer {
+    margin-top: 2.5rem;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    opacity: 0.6;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="logo-mark">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/>
+      <circle cx="12" cy="9" r="2.5"/>
+    </svg>
+  </div>
+
+  <h1 class="brand-name">Strong by Habit</h1>
+  <p class="tagline">Stop relying on willpower.<br>Start building habits.</p>
+
+  <div class="links">
+
+    <a href="https://calendly.com/seb-kiraly/zoom" class="link-card primary">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+          <line x1="8" y1="14" x2="8" y2="14"/>
+          <line x1="12" y1="14" x2="12" y2="14"/>
+          <line x1="16" y1="14" x2="16" y2="14"/>
+          <line x1="8" y1="18" x2="8" y2="18"/>
+          <line x1="12" y1="18" x2="12" y2="18"/>
+        </svg>
+      </div>
+      <div class="link-text">
+        <div class="link-title">Book your free Habit Audit</div>
+        <div class="link-sub">Free 30-minute call. No strings attached.</div>
+      </div>
+      <div class="arrow">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </a>
+
+    <div class="divider"></div>
+
+    <a href="https://strongbyhabit.fit/articles" class="link-card">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+      </div>
+      <div class="link-text">
+        <div class="link-title">Articles</div>
+        <div class="link-sub">Evidence-based fitness and habit guides</div>
+      </div>
+      <div class="arrow">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </a>
+
+    <a href="https://strongbyhabit.fit/your-coach" class="link-card">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <div class="link-text">
+        <div class="link-title">Meet your coach</div>
+        <div class="link-sub">Who is behind Strong by Habit</div>
+      </div>
+      <div class="arrow">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </a>
+
+    <a href="https://www.facebook.com/110515163851181" class="link-card">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24">
+          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+        </svg>
+      </div>
+      <div class="link-text">
+        <div class="link-title">Facebook</div>
+        <div class="link-sub">Follow for updates and community</div>
+      </div>
+      <div class="arrow">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </a>
+
+  </div>
+
+  <p class="footer">strongbyhabit.fit</p>
+
+</div>
+
+</body>
+</html>
