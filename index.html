@@ -3,308 +3,200 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Strong by Habit</title>
+<title>The Habit Realm</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root{--ink:#0d1017;--parchment:#f0e8d5;--gold:#c9922a;--mist:#8a99aa;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0e14;color:var(--parchment);font-family:'Crimson Pro',serif;min-height:100vh;overflow-x:hidden;}
 
-  :root {
-    --teal: #00695C;
-    --teal-light: #E1F5EE;
-    --teal-mid: #0F6E56;
-    --teal-dark: #085041;
-    --text: #1a1a1a;
-    --text-muted: #5a5a5a;
-    --bg: #f7f6f2;
-    --card-bg: #ffffff;
-    --border: rgba(0,0,0,0.08);
-  }
+#map-hero{position:relative;width:100%;background:#060a0e;}
+#map-hero img{display:block;width:100%;height:auto;max-height:92vh;object-fit:contain;}
+.map-title-overlay{position:absolute;top:0;left:0;right:0;padding:24px;text-align:center;background:linear-gradient(to bottom,rgba(6,10,14,.85) 0%,transparent 100%);}
+.realm-eyebrow{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.35em;color:var(--gold);margin-bottom:8px;opacity:.8;}
+.realm-title{font-family:'Cinzel',serif;font-size:clamp(1.4rem,3.5vw,2.8rem);font-weight:700;color:var(--parchment);letter-spacing:.06em;text-shadow:0 0 40px #c9922a66;}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 3rem 1.25rem 4rem;
-  }
+.hotspot{position:absolute;transform:translate(-50%,-50%);cursor:pointer;z-index:10;}
+.hotspot-pulse{width:30px;height:30px;border-radius:50%;border:2px solid var(--hs-color);background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s;box-shadow:0 0 14px var(--hs-color);}
+.hotspot:hover .hotspot-pulse{transform:scale(1.4);box-shadow:0 0 24px var(--hs-color),0 0 0 6px rgba(255,255,255,.06);}
+.hotspot-label{position:absolute;top:calc(100% + 5px);left:50%;transform:translateX(-50%);white-space:nowrap;font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.12em;color:var(--parchment);background:rgba(6,10,14,.9);padding:3px 7px;border-radius:2px;border:1px solid rgba(255,255,255,.12);opacity:0;pointer-events:none;transition:opacity .2s;}
+.hotspot:hover .hotspot-label{opacity:1;}
 
-  .container {
-    width: 100%;
-    max-width: 480px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-  }
+.scroll-hint{text-align:center;padding:14px;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.2em;color:#3a4a5a;}
 
-  .logo-mark {
-    width: 64px;
-    height: 64px;
-    background: var(--teal);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.25rem;
-    flex-shrink: 0;
-  }
+#region-grid{padding:40px 28px 60px;max-width:1400px;margin:0 auto;}
+.grid-heading{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.25em;color:#3a4a5a;text-align:center;margin-bottom:28px;}
+.regions-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+.region-card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:2px;cursor:pointer;overflow:hidden;transition:transform .3s,box-shadow .3s;}
+.region-card:hover{transform:translateY(-5px);box-shadow:0 16px 50px -10px var(--rc-glow);border-color:var(--rc);}
+.card-stripe{height:3px;background:var(--rc);width:100%;}
+.card-body{padding:20px 22px 18px;}
+.card-icon{font-size:2.2rem;margin-bottom:8px;line-height:1;}
+.card-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;color:var(--parchment);margin-bottom:4px;letter-spacing:.04em;}
+.card-tagline{font-style:italic;font-size:.85rem;color:var(--rc);margin-bottom:12px;line-height:1.4;}
+.card-count{display:inline-flex;align-items:center;gap:6px;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.12em;color:var(--rc);background:rgba(255,255,255,.04);border:1px solid var(--rc);padding:3px 10px;border-radius:1px;margin-bottom:12px;}
+.card-preview{font-size:.8rem;color:#6a7a8a;line-height:1.6;margin-bottom:16px;}
+.card-enter{width:100%;background:transparent;border:1px solid rgba(255,255,255,.12);color:var(--mist);padding:9px;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.16em;cursor:pointer;transition:all .25s;border-radius:1px;}
+.card-enter:hover{background:var(--rc);color:#000;border-color:var(--rc);}
 
-  .logo-mark svg {
-    width: 32px;
-    height: 32px;
-    fill: none;
-    stroke: #ffffff;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
+#region-view{display:none;position:fixed;inset:0;background:#060a0e;z-index:200;overflow-y:auto;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.region-view-inner{max-width:960px;margin:0 auto;padding:36px 28px 80px;}
+.back-btn{display:inline-flex;align-items:center;gap:8px;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.18em;color:#4a5a6a;cursor:pointer;margin-bottom:36px;background:none;border:none;padding:0;transition:color .2s;}
+.back-btn:hover{color:var(--parchment);}
+.region-detail-icon{font-size:3rem;margin-bottom:10px;}
+.region-detail-name{font-family:'Cinzel',serif;font-size:clamp(1.4rem,4vw,2.4rem);font-weight:700;color:var(--parchment);margin-bottom:6px;letter-spacing:.04em;}
+.region-detail-tagline{font-size:1.05rem;font-style:italic;margin-bottom:24px;}
+.region-lore-box{padding:24px 26px;border-left:2px solid var(--rc);background:rgba(255,255,255,.02);margin-bottom:16px;border-radius:0 4px 4px 0;}
+.region-description{font-size:1rem;line-height:1.9;color:#c8b898;}
+.region-expect{font-size:.82rem;line-height:1.75;color:#7a8a6a;font-style:italic;padding:16px 26px 20px;border-left:2px solid rgba(255,255,255,.08);background:rgba(255,255,255,.015);margin-bottom:36px;border-radius:0 4px 4px 0;}
+.region-expect-label{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.18em;color:#3a5a3a;display:block;margin-bottom:6px;}
+.spots-heading{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.22em;color:#3a4a5a;margin-bottom:20px;}
+.spots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+.spot-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:2px;cursor:pointer;overflow:hidden;transition:border-color .25s,background .25s,transform .25s;}
+.spot-card:hover{border-color:var(--rc);background:rgba(255,255,255,.06);transform:translateY(-3px);}
+.spot-top{padding:18px 18px 14px;border-bottom:1px solid rgba(255,255,255,.05);}
+.spot-icon{font-size:1.8rem;margin-bottom:8px;line-height:1;}
+.spot-name{font-family:'Cinzel',serif;font-size:.82rem;font-weight:600;color:var(--parchment);margin-bottom:4px;letter-spacing:.04em;}
+.spot-flavor{font-size:.76rem;color:#6a7a8a;font-style:italic;line-height:1.4;}
+.spot-habits{padding:12px 18px 16px;}
+.spot-habit-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.spot-habit-row:last-child{border-bottom:none;}
+.spot-habit-emoji{font-size:1rem;flex-shrink:0;}
+.spot-habit-name{font-size:.76rem;color:#c8b898;line-height:1.3;flex:1;}
+.spot-cadence-pill{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.06em;padding:2px 6px;border-radius:10px;flex-shrink:0;white-space:nowrap;}
+.cadence-daily{background:rgba(110,207,122,.15);color:#6ecf7a;border:1px solid rgba(110,207,122,.3);}
+.cadence-weekly{background:rgba(126,184,232,.15);color:#7eb8e8;border:1px solid rgba(126,184,232,.3);}
 
-  .brand-name {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.75rem;
-    color: var(--text);
-    letter-spacing: -0.02em;
-    margin-bottom: 0.4rem;
-    text-align: center;
-  }
-
-  .tagline {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    text-align: center;
-    margin-bottom: 2.5rem;
-    line-height: 1.5;
-  }
-
-  .links {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .link-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 1rem 1.25rem;
-    text-decoration: none;
-    color: var(--text);
-    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-    cursor: pointer;
-  }
-
-  .link-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-    border-color: rgba(0,105,92,0.25);
-  }
-
-  .link-card:active {
-    transform: translateY(0);
-    box-shadow: none;
-  }
-
-  .link-card.primary {
-    background: var(--teal);
-    border-color: var(--teal);
-    color: #ffffff;
-  }
-
-  .link-card.primary:hover {
-    background: var(--teal-mid);
-    border-color: var(--teal-mid);
-    box-shadow: 0 6px 20px rgba(0,105,92,0.3);
-  }
-
-  .icon-wrap {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: var(--teal-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .link-card.primary .icon-wrap {
-    background: rgba(255,255,255,0.2);
-  }
-
-  .icon-wrap svg {
-    width: 18px;
-    height: 18px;
-    stroke: var(--teal);
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .link-card.primary .icon-wrap svg {
-    stroke: #ffffff;
-  }
-
-  .link-text {
-    flex: 1;
-  }
-
-  .link-title {
-    font-size: 0.95rem;
-    font-weight: 500;
-    line-height: 1.3;
-  }
-
-  .link-sub {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-top: 2px;
-  }
-
-  .link-card.primary .link-sub {
-    color: rgba(255,255,255,0.7);
-  }
-
-  .arrow {
-    flex-shrink: 0;
-    opacity: 0.35;
-  }
-
-  .link-card.primary .arrow {
-    opacity: 0.6;
-  }
-
-  .arrow svg {
-    width: 16px;
-    height: 16px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .divider {
-    width: 100%;
-    height: 1px;
-    background: var(--border);
-    margin: 0.5rem 0;
-  }
-
-  .footer {
-    margin-top: 2.5rem;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    opacity: 0.6;
-    text-align: center;
-  }
+#spot-view{display:none;position:fixed;inset:0;background:#040810ee;z-index:300;overflow-y:auto;animation:fadeIn .25s ease;}
+.spot-view-inner{max-width:600px;margin:0 auto;padding:36px 28px 80px;}
+.spot-back-btn{display:inline-flex;align-items:center;gap:8px;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.18em;color:#4a5a6a;cursor:pointer;margin-bottom:36px;background:none;border:none;padding:0;transition:color .2s;}
+.spot-back-btn:hover{color:var(--parchment);}
+.spot-detail-icon{font-size:3.5rem;margin-bottom:12px;}
+.spot-detail-name{font-family:'Cinzel',serif;font-size:clamp(1.3rem,4vw,1.9rem);font-weight:700;color:var(--parchment);margin-bottom:6px;letter-spacing:.04em;}
+.spot-detail-region{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.18em;margin-bottom:20px;opacity:.7;}
+.spot-detail-lore{font-size:.92rem;line-height:1.8;color:#a09080;padding:16px 18px;border-left:2px solid var(--rc);background:rgba(255,255,255,.02);margin-bottom:32px;border-radius:0 4px 4px 0;}
+.habits-unlock-heading{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.22em;color:#3a4a5a;margin-bottom:14px;}
+.unlock-habits{display:flex;flex-direction:column;gap:10px;}
+.unlock-habit{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:2px;transition:border-color .2s;}
+.unlock-habit:hover{border-color:var(--rc);}
+.unlock-emoji{font-size:1.4rem;flex-shrink:0;}
+.unlock-info{flex:1;}
+.unlock-name{font-size:.9rem;color:var(--parchment);margin-bottom:3px;line-height:1.3;}
+.unlock-meta{display:flex;align-items:center;gap:8px;margin-top:4px;}
+.unlock-id{font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.1em;color:#3a4a5a;}
+.unlock-badge{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;padding:3px 9px;border:1px solid var(--rc);color:var(--rc);border-radius:1px;flex-shrink:0;background:rgba(255,255,255,.03);align-self:center;}
 </style>
 </head>
 <body>
 
-<div class="container">
-
-  <div class="logo-mark">
-    <svg viewBox="0 0 24 24">
-      <path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/>
-      <circle cx="12" cy="9" r="2.5"/>
-    </svg>
+<div id="map-hero">
+  <div class="map-title-overlay">
+    <div class="realm-eyebrow">AN ATLAS OF PRACTICE</div>
+    <div class="realm-title">The Habit Realm</div>
   </div>
+  <img src="The_Habit_Realm.png" alt="The Habit Realm Map" id="map-img">
 
-  <h1 class="brand-name">Strong by Habit</h1>
-  <p class="tagline">Stop relying on willpower.<br>Start building habits.</p>
-
-  <div class="links">
-
-    <a href="https://calendly.com/seb-kiraly/zoom" class="link-card primary">
-      <div class="icon-wrap">
-        <svg viewBox="0 0 24 24">
-          <rect x="3" y="4" width="18" height="18" rx="2"/>
-          <line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-          <line x1="8" y1="14" x2="8" y2="14"/>
-          <line x1="12" y1="14" x2="12" y2="14"/>
-          <line x1="16" y1="14" x2="16" y2="14"/>
-          <line x1="8" y1="18" x2="8" y2="18"/>
-          <line x1="12" y1="18" x2="12" y2="18"/>
-        </svg>
-      </div>
-      <div class="link-text">
-        <div class="link-title">Book your free Habit Audit</div>
-        <div class="link-sub">Free 30-minute call. No strings attached.</div>
-      </div>
-      <div class="arrow">
-        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </div>
-    </a>
-
-    <div class="divider"></div>
-
-    <a href="https://strongbyhabit.fit/articles" class="link-card">
-      <div class="icon-wrap">
-        <svg viewBox="0 0 24 24">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
-          <line x1="16" y1="13" x2="8" y2="13"/>
-          <line x1="16" y1="17" x2="8" y2="17"/>
-          <polyline points="10 9 9 9 8 9"/>
-        </svg>
-      </div>
-      <div class="link-text">
-        <div class="link-title">Articles</div>
-        <div class="link-sub">Evidence-based fitness and habit guides</div>
-      </div>
-      <div class="arrow">
-        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </div>
-    </a>
-
-    <a href="https://strongbyhabit.fit/your-coach" class="link-card">
-      <div class="icon-wrap">
-        <svg viewBox="0 0 24 24">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
-      </div>
-      <div class="link-text">
-        <div class="link-title">Meet your coach</div>
-        <div class="link-sub">Who is behind Strong by Habit</div>
-      </div>
-      <div class="arrow">
-        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </div>
-    </a>
-
-    <a href="https://www.facebook.com/110515163851181" class="link-card">
-      <div class="icon-wrap">
-        <svg viewBox="0 0 24 24">
-          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-        </svg>
-      </div>
-      <div class="link-text">
-        <div class="link-title">Facebook</div>
-        <div class="link-sub">Follow for updates and community</div>
-      </div>
-      <div class="arrow">
-        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </div>
-    </a>
-
+  <div class="hotspot" style="left:13%;top:12%;--hs-color:#7eb8e8;" onclick="openRegionById('velun')">
+    <div class="hotspot-pulse">🌙</div><div class="hotspot-label">The Velun Highlands</div>
   </div>
-
-  <p class="footer">strongbyhabit.fit</p>
-
+  <div class="hotspot" style="left:9%;top:44%;--hs-color:#f5c842;" onclick="openRegionById('aureic')">
+    <div class="hotspot-pulse">🌅</div><div class="hotspot-label">The Aureic Coast</div>
+  </div>
+  <div class="hotspot" style="left:31%;top:29%;--hs-color:#6ecf7a;" onclick="openRegionById('mirewood')">
+    <div class="hotspot-pulse">🌿</div><div class="hotspot-label">The Mirewood</div>
+  </div>
+  <div class="hotspot" style="left:27%;top:53%;--hs-color:#e87c3e;" onclick="openRegionById('ashveld')">
+    <div class="hotspot-pulse">⚒️</div><div class="hotspot-label">The Ashveld</div>
+  </div>
+  <div class="hotspot" style="left:37%;top:80%;--hs-color:#5ecec4;" onclick="openRegionById('hollows')">
+    <div class="hotspot-pulse">🛁</div><div class="hotspot-label">The Tidal Hollows</div>
+  </div>
+  <div class="hotspot" style="left:51%;top:45%;--hs-color:#d4a843;" onclick="openRegionById('plains')">
+    <div class="hotspot-pulse">🍲</div><div class="hotspot-label">The Granary Plains</div>
+  </div>
+  <div class="hotspot" style="left:65%;top:40%;--hs-color:#e85c8a;" onclick="openRegionById('cindermarsh')">
+    <div class="hotspot-pulse">⚗️</div><div class="hotspot-label">The Cindermarsh</div>
+  </div>
+  <div class="hotspot" style="left:64%;top:11%;--hs-color:#b07fff;" onclick="openRegionById('skein')">
+    <div class="hotspot-pulse">🔭</div><div class="hotspot-label">The Skein Peaks</div>
+  </div>
+  <div class="hotspot" style="left:87%;top:22%;--hs-color:#7a9fff;" onclick="openRegionById('irongate')">
+    <div class="hotspot-pulse">🏛️</div><div class="hotspot-label">The Irongate Vale</div>
+  </div>
+  <div class="hotspot" style="left:85%;top:50%;--hs-color:#f07050;" onclick="openRegionById('vastrun')">
+    <div class="hotspot-pulse">🏃</div><div class="hotspot-label">The Vastrun Steppe</div>
+  </div>
+  <div class="hotspot" style="left:69%;top:68%;--hs-color:#e8884a;" onclick="openRegionById('ember')">
+    <div class="hotspot-pulse">🏡</div><div class="hotspot-label">The Ember Shore</div>
+  </div>
+  <div class="hotspot" style="left:16%;top:79%;--hs-color:#a0c878;" onclick="openRegionById('foundry')">
+    <div class="hotspot-pulse">🧍</div><div class="hotspot-label">The Foundry Reach</div>
+  </div>
 </div>
 
+<div class="scroll-hint">↓ SCROLL TO BROWSE ALL TERRITORIES</div>
+
+<div id="region-grid">
+  <div class="grid-heading">TWELVE TERRITORIES · SELECT A REGION TO EXPLORE</div>
+  <div class="regions-container" id="regions-container"></div>
+</div>
+
+<div id="region-view"><div class="region-view-inner" id="region-view-inner"></div></div>
+<div id="spot-view"><div class="spot-view-inner" id="spot-view-inner"></div></div>
+
+<script>
+const regions=[
+{id:'velun',name:'The Velun Highlands',icon:'🌙',tagline:'A high country of mist, silence, and sacred rest',description:'The Velun Highlands rise steeply from the rest of the Realm, their peaks permanently wreathed in cloud. The air here is thin and cold and carries a particular quality of stillness that travelers notice within minutes of crossing the lower ridge. Stone paths wind between ancient monastery complexes, their lanterns burning low in perpetual amber dusk. The Highland light never fully brightens — even at noon, the sun filters through cloud in soft diffuse sheets, as though the land itself enforces a mood of quietude. Rivers here run slow and cold. The sound of water is everywhere but never loud.',expect:'Travelers to the Velun Highlands arrive restless and leave slow. The territory rewards those who come without urgency. Expect to be humbled by the pace here — the locals move deliberately, speak rarely, and sleep deeply. The Highland traditions center almost entirely on the transition from wakefulness to rest: what precedes sleep, what the body needs to descend properly, and what the environment must offer to receive it. Nights here are the longest in the Realm. They are meant to be.',color:'#7eb8e8',glow:'rgba(126,184,232,0.3)',spots:[{icon:'🕯️',name:'Stillwater Priory',flavor:'A monastery whose bells ring at the same hour every night, without variation, without exception.',lore:'The Priory\'s monks have rung the evening bell at the same hour for four hundred years. They believe the body learns not through instruction but through repetition — that if the same stimulus precedes sleep enough times, the body begins to prepare before the bell sounds. Travelers are welcomed to sleep here on the condition they leave before the morning bell.',habits:[{id:'CH025',name:'Set a Consistent Bedtime',emoji:'🕯️',tag:'Anchor',cadence:'daily'},{id:'CH036',name:'Avoid Liquids Before Bed',emoji:'🚫',tag:'Discipline',cadence:'daily'},{id:'CH113',name:'Follow a Consistent Wake Time on Weekends',emoji:'📅',tag:'Circadian',cadence:'weekly'}]},{icon:'📵',name:'The Duskgate',flavor:'A stone arch at the edge of the village where devices and bright light are ceremonially surrendered.',lore:'The Duskgate was carved a century before any screen existed — it originally marked the hour at which firelight replaced sunlight. When travelers began arriving with glowing devices, the gate\'s meaning simply extended to include them. Beyond the Duskgate, only candlelight and conversation are permitted.',habits:[{id:'CH015',name:'Turn Off Screens 1 Hour Before Bed',emoji:'📵',tag:'Shield',cadence:'daily'},{id:'CH053',name:'Sleep With an Eye Mask',emoji:'😴',tag:'Darkness',cadence:'daily'},{id:'CH061',name:'Embrace Complete Darkness for Optimal Sleep',emoji:'🌑',tag:'Darkness',cadence:'daily'}]},{icon:'🚿',name:'Coldrun Bath House',flavor:'A stone bathhouse fed by a glacial stream, used by the Highland monks every evening without exception.',lore:'The bathhouse water comes directly from the glacier above the Priory. It is cold enough to make the breath catch. The monks enter slowly, stay briefly, and emerge with their core temperature dropping — which, they discovered through observation rather than science, produced a quality of sleep that warm bathing never matched.',habits:[{id:'CH006',name:'Take a Cool Shower Before Bed',emoji:'🚿',tag:'Ritual',cadence:'daily'},{id:'CH051',name:'Wear Socks to Bed for Better Sleep',emoji:'🧦',tag:'Comfort',cadence:'daily'},{id:'CH032',name:'Enhance Sleep Quality with Lavender Oil',emoji:'💜',tag:'Elixir',cadence:'daily'}]},{icon:'🧘',name:'The Restorative Wall of Iln',flavor:'An ancient wall where, by tradition, travelers rest with their legs raised against the stone.',lore:'The Wall of Iln has no inscription, no history, and no official purpose. A traveling healer named Iln simply began lying here with her legs raised after long journeys, and others followed. The position became a tradition. The tradition became a pilgrimage. Now travelers come from across the Realm specifically to lie here for a few minutes and feel the tension of the day drain out.',habits:[{id:'CH012',name:'Put Your Legs Up the Wall Before Bed',emoji:'🧘',tag:'Restore',cadence:'daily'},{id:'CH063',name:'Enhance Sleep Quality by Bedtime Stretching',emoji:'🌿',tag:'Restore',cadence:'daily'},{id:'CH047',name:'Boost Sleep Quality Through Nightly Meditation',emoji:'🌊',tag:'Ritual',cadence:'daily'}]},{icon:'✍️',name:'The Scriptorium of Ash and Gratitude',flavor:'A candlelit writing hall where visitors record what the day gave them before surrendering to sleep.',lore:'Every desk in the Scriptorium holds the same three items: a candle, a blank page, and a small hourglass running three minutes. The practice is simple — write what you are grateful for, write what tomorrow needs, and then close the book. The Highlanders found that what is written down no longer needs to be rehearsed. The mind releases what the hand has already held.',habits:[{id:'CH016',name:'Write 3 Gratitudes Before Bed',emoji:'✍️',tag:'Rite',cadence:'daily'},{id:'CH022',name:"Write Tomorrow's To-Do List Before Bed",emoji:'📋',tag:'Rite',cadence:'daily'},{id:'CH044',name:'Visualize a Relaxing Scene Before Bed',emoji:'🌌',tag:'Vision',cadence:'daily'}]},{icon:'🥝',name:'The Evening Larder at Dunmorvane',flavor:'A small provisioning house at the edge of the Priory, open only in the final hour before curfew.',lore:'Dunmorvane\'s larder keeper is famously unimpressed by late visitors. She serves kiwi, water, and nothing else after the seventh hour. She has done this for decades and will tell anyone who asks that she sleeps better than anyone in the Highlands. She is probably right.',habits:[{id:'CH049',name:'Eat Kiwi Before Bed to Improve Sleep Quality',emoji:'🥝',tag:'Elixir',cadence:'daily'},{id:'CH079',name:'Skip Heavy Meals Before Bed',emoji:'🍽️',tag:'Discipline',cadence:'daily'},{id:'CH115',name:'Get 8-10 Minutes of Dim Light Before Bed',emoji:'🕯️',tag:'Circadian',cadence:'daily'}]}]},
+{id:'aureic',name:'The Aureic Coast',icon:'🌅',tagline:'Where the first light breaks and new days are seized',description:'The Aureic Coast stretches along a dramatic sea cliff facing east, its pale gold sandstone catching the dawn before any other territory in the Realm. The coastline is all contrast: dark water below, blazing sky above, and a narrow strip of habitation carved into the cliff face itself. The wind here is constant and sea-salted. At five in the morning, the sky performs: deep indigo giving way to violet, then rose, then the sudden violent gold that gave the coast its name. Everything here is oriented eastward. Every window, every bench, every meditation platform faces the sunrise.',expect:'The Aureic Coast attracts those who are willing to be changed by the morning. Travelers who arrive expecting comfort will find instead a kind of productive discomfort — early bells, cold water, protein before anything sweet. The culture here is defined by the principle of first acts: that what you do in the first thirty minutes of the day sets the trajectory of every hour that follows. Expect to wake before you are ready. Expect to be glad you did.',color:'#f5c842',glow:'rgba(245,200,66,0.3)',spots:[{icon:'⏰',name:'The First Bell of Cape Orveth',flavor:'A bronze bell mounted on the highest point of the cape, struck once at the moment the horizon lightens.',lore:'The bell at Cape Orveth does not ring to drag the reluctant from bed. It rings to honor those who are already awake. The Coast\'s oldest tradition holds that the choice to rise happens the night before — in what you write, in when you sleep, in the intention you set before closing your eyes. The bell simply marks that the moment has arrived.',habits:[{id:'CH019',name:'Wake Up Without Snooze',emoji:'⏰',tag:'Courage',cadence:'daily'},{id:'CH045',name:'Harness Morning Intention Setting for Daily Success',emoji:'🧭',tag:'Purpose',cadence:'daily'},{id:'CH072',name:'Write Morning Pages to Unlock Creativity',emoji:'📓',tag:'Rite',cadence:'daily'}]},{icon:'☀️',name:"The Solar Terrace of Veth'ran",flavor:'An open stone terrace cantilevered over the sea, facing east, reserved exclusively for the first hour of sunrise.',lore:"Veth'ran was a cartographer who mapped the entire coast from this exact point. She later wrote that the terrace had made her a better thinker — not because of the view, but because of the morning light on her face every day for twelve years. The Coast's practitioners now understand what she intuited: that early light sets the biological clock in ways nothing else can replicate.",habits:[{id:'CH013',name:'Step Into the Morning Sun',emoji:'☀️',tag:'Light',cadence:'daily'},{id:'CH070',name:'Start Your Day With a Morning Stretch Routine',emoji:'🌄',tag:'Ritual',cadence:'daily'},{id:'CH045',name:'Harness Morning Intention Setting for Daily Success',emoji:'🧭',tag:'Purpose',cadence:'daily'}]},{icon:'💧',name:'The Well of Firstwater',flavor:'A deep cliff-face well whose water is drawn before dawn and drunk before anything else passes the lips.',lore:'The well predates every building on the coast. Its water is cold and slightly mineral. The tradition of drinking from it before eating, before speaking, before looking at any document — this did not begin as a health practice. It began as a spiritual one. The effect on morning hunger and afternoon energy was noticed later, and the tradition needed no further justification.',habits:[{id:'CH014',name:'Drink Water Upon Waking',emoji:'💧',tag:'First Act',cadence:'daily'},{id:'CH041',name:'Prioritize Protein Upon Waking',emoji:'🥚',tag:'Fuel',cadence:'daily'},{id:'CH114',name:'Practice Time-Restricted Eating (16:8 or 14:10)',emoji:'⏳',tag:'Window',cadence:'daily'}]},{icon:'🥚',name:'The Protein Hall of Saorveth',flavor:'A long open-air dining hall where the morning meal is built deliberately and eaten in sight of the sea.',lore:"Saorveth's hall was built by a fishing community that noticed its strongest members all ate protein within the first hour of waking. The observation became practice. The practice became architecture. Now the hall serves the morning meal to anyone who arrives before the second bell — and only those who arrive after the first.",habits:[{id:'CH041',name:'Prioritize Protein Upon Waking',emoji:'🥚',tag:'Fuel',cadence:'daily'},{id:'CH119',name:'Prioritize Magnesium-Rich Foods',emoji:'🌰',tag:'Mineral',cadence:'daily'},{id:'CH118',name:'Eat a Brazil Nut Daily for Selenium',emoji:'🥜',tag:'Mineral',cadence:'daily'}]},{icon:'📓',name:"Veth'ran's Page Room",flavor:'A narrow writing chamber built into the cliff, with no east-facing window — the morning light is earned outside first.',lore:"The cartographer's original study still stands, its desk worn smooth. The rule of the room is unchanged: no entry until the sunrise has been witnessed in person. The pages written here after that ritual are, by Coast tradition, more honest than pages written anywhere else.",habits:[{id:'CH072',name:'Write Morning Pages to Unlock Creativity',emoji:'📓',tag:'Rite',cadence:'daily'},{id:'CH102',name:'Practice Deliberate Recall After Learning',emoji:'🧠',tag:'Cognition',cadence:'daily'},{id:'CH013',name:'Step Into the Morning Sun',emoji:'☀️',tag:'Light',cadence:'daily'}]},{icon:'🏋️',name:'The Pre-Dawn Vault of Korrath',flavor:'A sea-cave training chamber accessible only at low tide, open only before sunrise.',lore:"Korrath was a fisherman who began lifting weighted nets before his boats launched. His grandchildren built the vault. It floods at high tide, which means training here requires waking before the sea allows it — an additional discipline the vault's users consider part of the practice. Those who train in Korrath's Vault at dawn report the rest of the day feels different. Lighter. Earned.",habits:[{id:'CH091',name:'Lift Weights First Thing',emoji:'🏋️',tag:'Forge',cadence:'daily'},{id:'CH019',name:'Wake Up Without Snooze',emoji:'⏰',tag:'Courage',cadence:'daily'},{id:'CH070',name:'Start Your Day With a Morning Stretch Routine',emoji:'🌄',tag:'Ritual',cadence:'daily'}]}]},
+{id:'mirewood',name:'The Mirewood',icon:'🌿',tagline:'An ancient forest that reveals itself only to the unhurried',description:"The Mirewood is the oldest territory in the Realm — or so its inhabitants claim. Its trees predate every map, every name, every road. The canopy is so dense that the light reaching the forest floor is perpetually green-gold, shifting and dappled, never quite still. The Mirewood has no defined borders. Travelers who enter it from the west find meadows and open glades; those who enter from the north find dense oak corridors that close behind them like a door. The forest is threaded with rivers — shallow, cold, extraordinarily clear — and the sound of moving water is never more than a few minutes' walk away in any direction.",expect:"The Mirewood will slow you down. This is not a flaw. Travelers who arrive carrying urgency find the forest frustrating at first — the paths shift, the clearings move, the landmarks refuse to stay fixed. Those who surrender the schedule discover that the Mirewood has its own itinerary: breath, presence, attention to small things. The practices unlocked here are not dramatic. They are quiet and cumulative, and their effects on the body and mind compound over weeks and months in ways that are difficult to explain to those who have not walked these paths.",color:'#6ecf7a',glow:'rgba(110,207,122,0.3)',spots:[{icon:'🚶',name:'Emberfall Trailhead',flavor:"The forest's oldest entrance, marked by a carved post where travelers leave their devices before entering.",lore:"The post at Emberfall is covered in moss and carved with a single instruction that has faded to near-illegibility: leave what hums behind. The forest predates this instruction by centuries. The instruction simply acknowledges what the forest had always required. Those who ignore it find the Mirewood ordinary. Those who obey find it extraordinary.",habits:[{id:'CH010',name:'Take a Mindful Walk Without Your Phone',emoji:'🚶',tag:'Presence',cadence:'daily'},{id:'CH027',name:'Go for a Gratitude Walk',emoji:'🙏',tag:'Heart',cadence:'daily'},{id:'CH106',name:'Do a Weekly Awe Walk',emoji:'🌌',tag:'Wonder',cadence:'weekly'}]},{icon:'🧘',name:'The Seventeen Clearing',flavor:'A perfectly circular glade where the trees have grown in an unbroken ring for as long as anyone can remember.',lore:"No one planted these trees in a circle. No one knows why they grew this way. The clearing they enclose is approximately the right size for one person to sit in the center and feel, in every direction, held. Practitioners discovered empirically that seventeen minutes of stillness here — not sixteen, not eighteen — produced a specific quality of mental quiet that could be returned to throughout the day.",habits:[{id:'CH001',name:'Meditate for 17 Minutes',emoji:'🧘',tag:'Depth',cadence:'daily'},{id:'CH021',name:'Meditate by Body Scanning',emoji:'🔍',tag:'Scan',cadence:'daily'},{id:'CH108',name:'Practice Loving-Kindness Meditation',emoji:'💛',tag:'Empathy',cadence:'daily'}]},{icon:'🌬️',name:"Korrith's Standing Stones",flavor:'A ring of carved stones deep in the forest, each face engraved with a different pattern of breath.',lore:"Korrith was a healer who believed that how a person breathed determined more about their health than anything they ate or avoided. She spent thirty years carving her findings into stone. The patterns she left are not decorative — they are instructions. Practitioners who follow them report measurable changes in how their bodies handle stress within a matter of weeks.",habits:[{id:'CH068',name:'Harness the Power of Deep Belly Breathing',emoji:'🌬️',tag:'Root',cadence:'daily'},{id:'CH055',name:'Boost Lung Capacity with Short Breath Holds',emoji:'🫁',tag:'Breath',cadence:'daily'},{id:'CH030',name:'Practice a One-Minute Breath Meditation',emoji:'💨',tag:'Entry',cadence:'daily'}]},{icon:'🍃',name:"The Meal-Walker's Loop",flavor:"A gentle unmarked path that begins at the forest's central clearing and returns to it in exactly fifteen minutes.",lore:"The loop was walked for the first time by a Mirewood elder who noticed that her digestion improved whenever she walked after eating rather than sitting. She said nothing — she simply walked the same path after every meal, and eventually others followed. The path has no name on any map. Locals call it the Meal-Walker's Loop because nothing else has stuck.",habits:[{id:'CH026',name:'Walk After Meals',emoji:'🍃',tag:'Digest',cadence:'daily'},{id:'CH066',name:'Park Farther From Entrances To Boost Daily Steps',emoji:'🅿️',tag:'Clever',cadence:'daily'},{id:'CH052',name:'Embrace Afternoon Sunlight Walks',emoji:'🌤️',tag:'Light',cadence:'daily'}]},{icon:'🙏',name:'The Glade of Thannen',flavor:'A sun-filled hollow discovered by a monk named Thannen, who sat here every morning naming what he was grateful for.',lore:"Thannen's glade is unremarkable to look at — a patch of light among trees, wildflowers in season, birdsong in the canopy. What Thannen understood, and what the Mirewood's practitioners have preserved, is that gratitude is not a feeling — it is a practice. Named specifically, in a specific place, at a specific time, it becomes something the nervous system can learn to produce on demand.",habits:[{id:'CH023',name:'Cultivate Gratitude',emoji:'✨',tag:'Heart',cadence:'daily'},{id:'CH027',name:'Go for a Gratitude Walk',emoji:'🙏',tag:'Heart',cadence:'daily'},{id:'CH105',name:'Practice the Physiological Sigh When Stressed',emoji:'😮‍💨',tag:'Reset',cadence:'daily'}]},{icon:'🤝',name:'The Crossing at Verath Bridge',flavor:'An old stone bridge where the forest tradition demands a traveler offers something to whoever they meet.',lore:"The bridge was built wide enough for two people to pass with space between them — deliberately. The tradition of offering something at Verath Bridge is older than the bridge itself. It began at a ford that predated the stonework by two centuries. What is offered varies: a word, a held door, a moment of attention. The forest tracks these things in its own way.",habits:[{id:'CH064',name:'Practice Random Acts of Kindness',emoji:'🤝',tag:'Gift',cadence:'daily'},{id:'CH023',name:'Cultivate Gratitude',emoji:'✨',tag:'Heart',cadence:'daily'},{id:'CH107',name:'Keep a Worry Window (Scheduled Worry Time)',emoji:'🪟',tag:'Contain',cadence:'daily'}]}]},
+{id:'ashveld',name:'The Ashveld',icon:'⚒️',tagline:'A volcanic territory where effort is the only currency',description:"The Ashveld sits atop a collapsed volcanic plateau, its landscape a study in extremes: black basalt fields split by veins of mineral-bright stone, underground chambers warm enough to work in shirtless, and a sky that glows orange at dusk from the residual heat bleeding out of the earth below. The territory smells of sulfur and iron. It is loud — hammering, stone-on-stone, the low rhythmic percussion of bodies at work. There are no soft edges in the Ashveld. The architecture is functional and severe, built to withstand heat and effort rather than to impress. The people who live here are unhurried in a completely different way from the Velun Highlands — not because they are peaceful, but because they are focused.",expect:"The Ashveld rewards those who show up. It does not reward those who show up occasionally, or with excuses, or with a plan to start properly next week. The territory's entire culture is organized around the concept of the unbroken chain — the day added to the day added to the day until the work becomes indistinguishable from the person doing it. Travelers who stay long enough to understand this leave changed in ways that feel structural rather than motivational. The Ashveld does not inspire. It builds.",color:'#e87c3e',glow:'rgba(232,124,62,0.3)',spots:[{icon:'🦵',name:'The Foundation Hall of Greth',flavor:'The oldest training floor in the Ashveld, worn smooth by ten thousand repetitions.',lore:"Greth was the Ashveld's first trainer, and he insisted on one thing: the lower body first, always. He believed that every other strength was borrowed from the legs and that every injury he had ever seen traced back to a foundation that had never been properly built. His hall still stands. The floor has been replaced six times. The principle has not been touched.",habits:[{id:'CH029',name:'Improve Strength and Balance with Lunges',emoji:'🦵',tag:'Lower',cadence:'daily'},{id:'CH043',name:'Unlock the Power of Bodyweight Squats',emoji:'🏋️',tag:'Lower',cadence:'daily'},{id:'CH042',name:'Master the Wall Sit',emoji:'🧱',tag:'Endure',cadence:'daily'}]},{icon:'💪',name:'The Upper Works of Drevath',flavor:'A high-ceilinged chamber of iron bars and stone ledges where the upper body is trained without machines.',lore:"Drevath's philosophy was austere: if the movement required a machine, the machine was doing too much of the work. His chamber has no equipment beyond what the body itself and basic iron can provide. Push-ups, dead hangs, pressing. Travelers who train here for a week and return to modern gyms often find they have less patience for complexity.",habits:[{id:'CH035',name:'Maximize Strength with Push-Ups',emoji:'💪',tag:'Upper',cadence:'daily'},{id:'CH034',name:'Strengthen Your Core with Daily Planks',emoji:'🔩',tag:'Core',cadence:'daily'},{id:'CH077',name:'Slow Down and Perfect Your Form',emoji:'⚖️',tag:'Craft',cadence:'daily'}]},{icon:'🔩',name:"The Core Sanctum of Vel'Ash",flavor:'A chamber carved directly into the volcanic rock, used only for foundational movement.',lore:"Vel'Ash is the most stripped-back location in the entire Ashveld — no windows, no decoration, a single oil lamp. The only practice permitted here is holding the body against gravity: planks, wall sits, static holds. The Ashveld's masters say that strength without a stable core is architecture without a foundation. Vel'Ash is where the foundation is laid.",habits:[{id:'CH034',name:'Strengthen Your Core with Daily Planks',emoji:'🔩',tag:'Core',cadence:'daily'},{id:'CH042',name:'Master the Wall Sit',emoji:'🧱',tag:'Endure',cadence:'daily'},{id:'CH056',name:'Unlock the Benefits of Yoga Flow',emoji:'🧘',tag:'Flow',cadence:'weekly'}]},{icon:'🎵',name:'The Resonance Chamber',flavor:'A domed stone hall where the acoustics were engineered specifically to amplify rhythm during training.',lore:"The Resonance Chamber was an accident of geology — the dome amplifies sound in ways its builders did not plan. When the Ashveld's trainers discovered that working to a strong rhythm increased both output and consistency, they began routing all endurance and repetition training through the chamber. The musicians who play here are considered full members of the training staff.",habits:[{id:'CH076',name:'Boost Your Weight Training With Music',emoji:'🎵',tag:'Fuel',cadence:'daily'},{id:'CH077',name:'Slow Down and Perfect Your Form',emoji:'⚖️',tag:'Craft',cadence:'daily'},{id:'CH058',name:'Log Your Gym Workouts',emoji:'📓',tag:'Record',cadence:'daily'}]},{icon:'📆',name:'The Chain Wall of Ashport',flavor:"A public wall in the Ashveld's central settlement covered in unbroken marks — one for each consecutive training day.",lore:"Ashport's Chain Wall began as a single practitioner's private record on a small stone. Others added theirs. The wall grew. Now it runs the entire length of the settlement's main thoroughfare and is the first thing visitors see on arrival. Broken chains are not erased. They remain as honest record. The Ashveld does not pretend.",habits:[{id:'CH062',name:'Build Consistency With 4+ Workouts a Week',emoji:'📆',tag:'Anchor',cadence:'weekly'},{id:'CH058',name:'Log Your Gym Workouts',emoji:'📓',tag:'Record',cadence:'daily'},{id:'CH092',name:'Record and Display Your Daily Achievements',emoji:'🏅',tag:'Pride',cadence:'daily'}]},{icon:'🪜',name:'The Ascent at Ironfell',flavor:'A natural staircase of basalt columns, climbed by every Ashveld resident as the mandatory exit from the lower plateau.',lore:"There is no other way out of the lower Ashveld. The basalt columns were here before the settlement, and the settlement was built around the understanding that the climb was non-negotiable. The Ashveld's founders considered this a feature. Travelers who complain about it are gently told that this is precisely the point.",habits:[{id:'CH089',name:'Climb a Number of Stair Flights',emoji:'🪜',tag:'Ascend',cadence:'daily'},{id:'CH062',name:'Build Consistency With 4+ Workouts a Week',emoji:'📆',tag:'Anchor',cadence:'weekly'},{id:'CH109',name:'Do 5 Minutes of Vigorous Activity (VILPA)',emoji:'⚡',tag:'Burst',cadence:'daily'}]}]},
+{id:'hollows',name:'The Tidal Hollows',icon:'🛁',tagline:'A coast of caves and springs where the body is given time to rebuild',description:"The Tidal Hollows occupy a stretch of low coastline where the rock has been carved hollow by centuries of wave action, creating a labyrinth of sea caves, thermal pools, and brackish inlets that shift with every tide. At high tide, half the territory is submerged. At low tide, the Hollows reveal themselves fully: steaming geothermal pools, cold ocean channels running alongside warm mineral springs, and cave systems whose walls glitter with salt crystal. The air is heavy with mineral and brine. The sound is constant — water moving, dripping, breathing in and out with the tide. It is the most sensory territory in the Realm.",expect:"Recovery is the Hollows' only subject. The territory has no training areas, no competition, no urgency of any kind. Travelers who arrive still carrying the energy of the Ashveld find the Hollows disorienting at first — there is nothing to conquer here, no output to measure, no chain to extend. What the Hollows offer instead is the discipline of restoration: the cold pool, the warm mineral soak, the rolling gallery, the careful accounting of what was taken from the body and what must be returned. Those who learn this leave stronger than those who simply trained harder.",color:'#5ecec4',glow:'rgba(94,206,196,0.3)',spots:[{icon:'🪵',name:'The Rolling Gallery of Velne',flavor:'A long tidal cave whose smooth floor is used for soft-tissue work at every tide.',lore:"Velne's gallery was discovered by a traveler who crawled through it at low tide and found the floor worn perfectly smooth by centuries of sand and water — ideal for foam rolling, the traveler noted, and told others. The cave's length corresponds almost exactly to a full-body rolling protocol if you begin at the entrance and end at the far arch.",habits:[{id:'CH028',name:'Enhance Muscle Recovery with Foam Rolling',emoji:'🪵',tag:'Restore',cadence:'daily'},{id:'CH080',name:'Relieve Tension with Tennis Ball Massage',emoji:'🎾',tag:'Release',cadence:'daily'},{id:'CH031',name:'Take a Stretch Break',emoji:'🧩',tag:'Reset',cadence:'daily'}]},{icon:'❄️',name:'The Cold Channel of Drev',flavor:'A narrow sea inlet whose glacial water temperature has never, in recorded history, risen above nine degrees.',lore:"The Channel of Drev runs between two warm mineral pools, which makes its temperature all the more startling. The Hollows' practitioners discovered — as every cold-exposure tradition in the Realm has discovered independently — that the shock of the cold followed by warmth produces a physiological reset that has no warm-water equivalent. Ten seconds is the entry requirement. Ten seconds is, it turns out, enough.",habits:[{id:'CH008',name:'End Your Shower With a 10-Second Cold Blast',emoji:'❄️',tag:'Shock',cadence:'daily'},{id:'CH009',name:'Practice Progressive Muscle Relaxation',emoji:'🌊',tag:'Release',cadence:'daily'},{id:'CH112',name:'Do a Weekly Sauna Session',emoji:'🧖',tag:'Heat',cadence:'weekly'}]},{icon:'🌊',name:'The Release Grotto of Solvane',flavor:'A warm, sealed cave accessible only at low tide, used exclusively for nervous-system recovery.',lore:"Solvane's grotto is warm from geothermal activity and sealed from wind and wave. The silence inside is unlike anything available above ground. The Hollows' healers use it for progressive muscle relaxation — the systematic tensing and releasing of every muscle group until the body arrives at a stillness it could not have achieved by trying to be still.",habits:[{id:'CH009',name:'Practice Progressive Muscle Relaxation',emoji:'🌊',tag:'Release',cadence:'daily'},{id:'CH028',name:'Enhance Muscle Recovery with Foam Rolling',emoji:'🪵',tag:'Restore',cadence:'daily'},{id:'CH080',name:'Relieve Tension with Tennis Ball Massage',emoji:'🎾',tag:'Release',cadence:'daily'}]},{icon:'🥛',name:'The Replenishment House at Tolvath',flavor:"A provisioning station at the Hollows' central junction, open immediately after every training window.",lore:"Tolvath's house was built at the midpoint of the Hollows' tidal circuit — the place every traveler passes after finishing their session in the Ashveld and before entering the healing waters. The house's keeper has a sign above the door: the work is not complete until the debt is paid.",habits:[{id:'CH057',name:'Drink a Whey Protein Shake for Muscle Recovery',emoji:'🥛',tag:'Fuel',cadence:'daily'},{id:'CH002',name:'Supplement with Creatine',emoji:'💊',tag:'Elixir',cadence:'daily'},{id:'CH117',name:'Add Collagen Peptides Post-Workout',emoji:'🧴',tag:'Connective',cadence:'daily'}]},{icon:'👟',name:'The Low-Tide Circuit',flavor:'A marked path around the outer Hollows, accessible only between tides, designed for gentle movement on rest days.',lore:"The circuit exists for exactly one purpose: to keep the body moving without pushing it. The Hollows' healers found that complete rest produced slower recovery than gentle movement. The low-tide circuit is calibrated to be below any meaningful intensity threshold — walking on a beautiful path, at a time when the sea has made it available.",habits:[{id:'CH046',name:'Set a Step Goal to Boost Health',emoji:'👟',tag:'Active Rest',cadence:'daily'},{id:'CH031',name:'Take a Stretch Break',emoji:'🧩',tag:'Reset',cadence:'daily'},{id:'CH110',name:'Track Resting Heart Rate',emoji:'💓',tag:'Biomarker',cadence:'weekly'}]},{icon:'⚖️',name:'The Mirror Pool of Haelm',flavor:'A perfectly still tidal pool used by Hollows practitioners as a weekly reckoning point.',lore:"The pool at Haelm is famous for its stillness. The Hollows' tradition of weighing and measuring here grew from a simple observation: that the body responds to honest data, and that honest data, unlike mirrors in motion, does not distort. The pool shows exactly what it shows. Travelers are expected to look without flinching.",habits:[{id:'CH050',name:'Track Progress with Regular Self-Weighing',emoji:'⚖️',tag:'Data',cadence:'weekly'},{id:'CH059',name:'Supplement With Omega-3 for Heart Health',emoji:'🐟',tag:'Elixir',cadence:'daily'},{id:'CH002',name:'Supplement with Creatine',emoji:'💊',tag:'Elixir',cadence:'daily'}]}]},
+{id:'plains',name:'The Granary Plains',icon:'🍲',tagline:'Fertile lowlands where food is treated as both medicine and ceremony',description:"The Granary Plains spread across the Realm's broadest basin — flat, golden, extraordinarily productive. The sky here is enormous and uninterrupted, and the light is warm in a way that feels agricultural: as if the sun itself has been optimized for growing things. The settlements are low and spread out, connected by wide dust roads and lined with market halls, communal kitchens, root cellars, and preparation courtyards. The smell of the Plains shifts by hour: early morning brings bread and roasting grain, midday smells of cut vegetables and open markets, evening of slow-cooked stock and lavender pressed by warmth into the settling air.",expect:"Food on the Granary Plains is never casual and never rushed. Travelers are expected to participate in meal preparation, to eat at a table, to eat without a screen, and to be curious about where the ingredients came from and how they arrived at the plate. The Plains' traditions are fundamentally anti-convenience: not because convenience is evil, but because convenience removes the attention from the act, and the attention is considered most of the medicine.",color:'#d4a843',glow:'rgba(212,168,67,0.3)',spots:[{icon:'📝',name:'The Ledger House of Aevorn',flavor:'A civic building where Plains residents have recorded their meals before eating them for three generations.',lore:"The practice began with a single Plains elder who noticed that her hand, moving across the page before a meal, consistently changed what she chose to eat. The Ledger House was built to give the practice a home. The ledgers inside go back sixty years and make for remarkable reading.",habits:[{id:'CH005',name:'Log All Your Food Before You Eat It',emoji:'📝',tag:'Awareness',cadence:'daily'},{id:'CH007',name:'Practice Mindful Eating',emoji:'🥢',tag:'Presence',cadence:'daily'},{id:'CH017',name:'Eat Without Screens',emoji:'📵',tag:'Presence',cadence:'daily'}]},{icon:'🌈',name:'The Color Market of Vaelthar',flavor:"The Plains' largest open market, organized by produce color rather than produce type.",lore:"Vaelthar's market was reorganized by a Plains healer who wanted her patients to understand variety intuitively. By grouping produce by pigment instead of by type, she made the pattern visible: those who shopped with full color variation left with full nutritional range. The market has been organized this way for forty years.",habits:[{id:'CH020',name:'Eat the Rainbow at Every Meal',emoji:'🌈',tag:'Variety',cadence:'daily'},{id:'CH024',name:'Eat a Vegetable With Every Meal',emoji:'🥕',tag:'Foundation',cadence:'daily'},{id:'CH116',name:'Eat 30 Different Plant Foods Per Week',emoji:'🌱',tag:'Diversity',cadence:'weekly'}]},{icon:'🥢',name:'The Long Table of Sorvane',flavor:'A communal dining table half a kilometer long, at which the only rule is: no standing, no screens, no hurry.',lore:"The Long Table was built over three months by volunteer labor and has been set for meals every single day since. Its length means that strangers always eat beside strangers — which the Plains people consider a feature, not an inconvenience.",habits:[{id:'CH007',name:'Practice Mindful Eating',emoji:'🥢',tag:'Presence',cadence:'daily'},{id:'CH017',name:'Eat Without Screens',emoji:'📵',tag:'Presence',cadence:'daily'},{id:'CH011',name:'Avoid Takeout',emoji:'🚫',tag:'Discipline',cadence:'daily'}]},{icon:'🥣',name:"Morven's Grain Hall",flavor:'A civic breakfast hall that has served only whole grains since the day it opened, with no plans to change.',lore:"Morven was a Plains physician who spent twenty years documenting the health of farmers who ate oatmeal versus those who ate sweeter things in the morning. The documentation was thorough and the conclusion was simple. She built a hall. The hall is named after her not because she was beloved — she was famously difficult — but because she was right.",habits:[{id:'CH078',name:'Swap Sugary Cereals for Oatmeal',emoji:'🥣',tag:'Swap',cadence:'daily'},{id:'CH018',name:'Swap Processed Snacks for Whole Foods',emoji:'🥦',tag:'Swap',cadence:'daily'},{id:'CH024',name:'Eat a Vegetable With Every Meal',emoji:'🥕',tag:'Foundation',cadence:'daily'}]},{icon:'🥗',name:'The Preparation Yards of Aelwick',flavor:"A series of open-air preparation stations where Plains residents assemble the next day's meals before the evening meal ends.",lore:"Aelwick's yards operate on a simple logic: if the food is already prepared, the choice of what to eat has already been made. The tradition of preparation-before-hunger developed over generations as a response to the observation that hungry people choose differently than satisfied people.",habits:[{id:'CH082',name:'Prep Healthy Lunches',emoji:'🥗',tag:'Prepare',cadence:'weekly'},{id:'CH011',name:'Avoid Takeout',emoji:'🚫',tag:'Discipline',cadence:'daily'},{id:'CH005',name:'Log All Your Food Before You Eat It',emoji:'📝',tag:'Awareness',cadence:'daily'}]},{icon:'👨‍🍳',name:'The New Kitchen at Dunvaelt',flavor:'A teaching kitchen where a recipe never previously cooked is attempted every single week, by community rotation.',lore:"Dunvaelt's kitchen was founded on the observation that the Plains' healthiest eaters were its most culinarily curious. Boredom, the kitchen's founders believed, was the primary driver of poor food choices. The solution was novelty, on a schedule, shared with others who were also learning. The kitchen has not repeated a recipe in eleven years.",habits:[{id:'CH054',name:'Try a New Recipe Every Week',emoji:'👨‍🍳',tag:'Explore',cadence:'weekly'},{id:'CH020',name:'Eat the Rainbow at Every Meal',emoji:'🌈',tag:'Variety',cadence:'daily'},{id:'CH116',name:'Eat 30 Different Plant Foods Per Week',emoji:'🌱',tag:'Diversity',cadence:'weekly'}]}]},
+{id:'cindermarsh',name:'The Cindermarsh',icon:'⚗️',tagline:'A twilight wetland of fermentation, mineral springs, and precise nutrition',description:"The Cindermarsh occupies a brackish lowland between the Granary Plains and the sea, its landscape defined by reed beds, mineral springs, fermentation houses, and a permanent low mist. The ground is soft and yields slightly underfoot. The smell is complex — brine, yeast, iron from the mineral water, and something faintly botanical underneath everything else. At night, the marsh lights up with bioluminescent microorganisms in the shallow pools — an eerie, beautiful effect that locals consider ordinary.",expect:"The Cindermarsh is not for those seeking dramatic transformation. Its practitioners are patient and precise, concerned with inputs — what enters the body, in what form, at what time, and in combination with what else. Travelers who come expecting fast results are redirected, gently but firmly, toward the longer view. The Cindermarsh works in months, not days. Its results outlast everything else.",color:'#e85c8a',glow:'rgba(232,92,138,0.3)',spots:[{icon:'🍬',name:'The Purification Works of Veldrath',flavor:'A laboratory complex where the effects of sugar and liquid calories on the body have been studied for decades.',lore:"Veldrath's Works is the most data-dense location in the entire Cindermarsh. Every gram of added sugar consumed by a study participant over thirty years is recorded here. The researchers are not evangelists — they simply show visitors the data. The data speaks for itself, and it speaks loudly.",habits:[{id:'CH037',name:'Eliminate Added Sugar for Better Health',emoji:'🍬',tag:'Purify',cadence:'daily'},{id:'CH069',name:'Eliminate Liquid Calories for Weight Management',emoji:'🥤',tag:'Purify',cadence:'daily'},{id:'CH086',name:'Carry a Reusable Water Bottle Everywhere',emoji:'💧',tag:'Anchor',cadence:'daily'}]},{icon:'🫙',name:"Haelrun's Fermentation Cellars",flavor:'A network of underground vaults where living cultures have been cultivated without interruption for over a century.',lore:"Haelrun's cultures are the oldest continuously maintained fermentation strains in the Realm. The cellars smell of yeast and brine and something almost alive, because they are. The Cindermarsh's healers have long understood what researchers elsewhere confirmed only recently: that the gut is a second brain, and the community of organisms living in it requires deliberate cultivation.",habits:[{id:'CH065',name:'Boost Gut Health With Fermented Foods',emoji:'🫙',tag:'Culture',cadence:'daily'},{id:'CH067',name:'Boost Health With Leafy Greens',emoji:'🥬',tag:'Vital',cadence:'daily'},{id:'CH037',name:'Eliminate Added Sugar for Better Health',emoji:'🍬',tag:'Purify',cadence:'daily'}]},{icon:'🥜',name:'The Craft Provisions Workshop at Thornholt',flavor:'A small workshop where travelers learn to prepare their own trail provisions and electrolyte drinks from raw ingredients.',lore:"Thornholt's workshop runs three sessions a week. Its instructor makes one point repeatedly: the body knows the difference between electrolytes dissolved from whole mineral sources and those pressed into a synthetic tablet. Travelers leave with a week's provisions and a changed relationship to their own sustenance.",habits:[{id:'CH039',name:'Prepare Your Own Trail Mix',emoji:'🥜',tag:'Craft',cadence:'weekly'},{id:'CH040',name:'Craft a Homemade Electrolyte Drink',emoji:'⚡',tag:'Elixir',cadence:'weekly'},{id:'CH086',name:'Carry a Reusable Water Bottle Everywhere',emoji:'💧',tag:'Anchor',cadence:'daily'}]},{icon:'🥬',name:'The Green Dispensary at Aevel',flavor:"A narrow provisioning house built into the marsh's edge, stocked exclusively with leaves, stems, and dark vegetables.",lore:"Aevel's dispensary stocks no supplements, no extracts, no concentrated powders. Its keeper believes in the original sources. Every compound in every leafy green, she argues, exists in a matrix of co-factors that isolated supplementation cannot replicate. The dispensary's waiting list is the longest in the Cindermarsh.",habits:[{id:'CH067',name:'Boost Health With Leafy Greens',emoji:'🥬',tag:'Vital',cadence:'daily'},{id:'CH065',name:'Boost Gut Health With Fermented Foods',emoji:'🫙',tag:'Culture',cadence:'daily'},{id:'CH119',name:'Prioritize Magnesium-Rich Foods',emoji:'🌰',tag:'Mineral',cadence:'daily'}]},{icon:'⚡',name:'The Mineral Fountain of Raelshore',flavor:"A carved stone fountain at the marsh's edge, fed by the Cindermarsh's deepest mineral spring.",lore:"The fountain at Raelshore is three hundred years old. The water it channels has been tested more times than any other water in the Realm. It contains naturally occurring sodium, potassium, and magnesium at ratios that the Cindermarsh's apothecaries spent decades trying to replicate artificially before conceding that the spring had solved the problem first.",habits:[{id:'CH040',name:'Craft a Homemade Electrolyte Drink',emoji:'⚡',tag:'Elixir',cadence:'weekly'},{id:'CH086',name:'Carry a Reusable Water Bottle Everywhere',emoji:'💧',tag:'Anchor',cadence:'daily'},{id:'CH118',name:'Eat a Brazil Nut Daily for Selenium',emoji:'🥜',tag:'Mineral',cadence:'daily'}]},{icon:'🥚',name:'The Dawn Counter at Solvemoor',flavor:'A single-service provisioning post open only in the first hour after sunrise, serving protein and nothing else.',lore:"Solvemoor's counter has one item. The person behind it has no interest in discussing alternatives. The Cindermarsh arrived at this practice after extensive observation of what their practitioners ate in the first hour of the day and how that correlated with every health marker measured through the rest of it.",habits:[{id:'CH041',name:'Prioritize Protein Upon Waking',emoji:'🥚',tag:'Fuel',cadence:'daily'},{id:'CH039',name:'Prepare Your Own Trail Mix',emoji:'🥜',tag:'Craft',cadence:'weekly'},{id:'CH117',name:'Add Collagen Peptides Post-Workout',emoji:'🧴',tag:'Connective',cadence:'daily'}]}]},
+{id:'skein',name:'The Skein Peaks',icon:'🔭',tagline:'A high mountain range where the examined life is the only life worth living',description:"The Skein Peaks rise at the Realm's northeastern edge, their granite faces sharp and uncompromising against a sky that is, at this altitude, a slightly different shade of blue than anywhere below. The peaks are cold, clear, and extraordinarily quiet — the kind of quiet that amplifies internal sound rather than cancelling it. The settlements here are small and perched on natural ledges, connected by steep paths and rope-assisted scrambles. Every building faces a view. Every view includes both the vast distance below and the vast sky above.",expect:"Travelers to the Skein Peaks will be asked to look at themselves. Not metaphorically — with specific tools, specific practices, and a specific quality of honest attention that the altitude seems to make both easier and more necessary. The Peaks' practitioners are not therapists and not philosophers. They are observers. They have built systems for noticing patterns, naming states accurately, mapping the terrain of a life, and planning responses to predictable obstacles.",color:'#b07fff',glow:'rgba(176,127,255,0.3)',spots:[{icon:'📓',name:'The Candlelit Archive of Aethmor',flavor:'A stone library holding nothing but personal journals, some dating back four centuries.',lore:"The Archive does not hold books. It holds lives — recorded daily, in the same candlelight, at the same desk, by practitioners who understood that the examined life requires a container. The oldest journals in the Archive are nearly illegible with age. The most recent were written last night. The practice has not changed in four hundred years because nothing better has been found.",habits:[{id:'CH004',name:'Write a Daily Journal',emoji:'📓',tag:'Reflect',cadence:'daily'},{id:'CH087',name:'Name Your Emotions Clearly',emoji:'🗣️',tag:'Clarity',cadence:'daily'},{id:'CH088',name:'Release Your Worries',emoji:'🕊️',tag:'Freedom',cadence:'daily'}]},{icon:'☯️',name:'The Life Wheel Hall at Dunveth',flavor:'A circular stone chamber where travelers map every dimension of their life against every other.',lore:"Dunveth's hall is circular because the life wheel that forms its central practice is circular. Eight spokes. Eight domains. Each scored honestly, then looked at together. The Peaks' practitioners have found that the imbalances revealed by this exercise are almost never surprising — only previously unexamined. The looking is the intervention.",habits:[{id:'CH081',name:'Master Your Life Wheel',emoji:'☯️',tag:'Map',cadence:'weekly'},{id:'CH060',name:'Recognize Energy Limits to Schedule Downtime',emoji:'🔋',tag:'Wisdom',cadence:'daily'},{id:'CH104',name:'Learn One Practical Skill Per Month',emoji:'🛠️',tag:'Growth',cadence:'weekly'}]},{icon:'🗣️',name:'The Naming Room of Vaethmor',flavor:"A bare stone room with a single instruction carved above the door: Say what you feel. Exactly.",lore:"The room permits no approximations. Stressed will not do. The traveler must find the precise word: overwhelmed, resentful, ashamed, exhausted, grieving. The Peaks' researchers discovered that accurate emotional labeling reduces activation in the brain's alarm centers — that naming makes feelings smaller by making them specific.",habits:[{id:'CH087',name:'Name Your Emotions Clearly',emoji:'🗣️',tag:'Clarity',cadence:'daily'},{id:'CH088',name:'Release Your Worries',emoji:'🕊️',tag:'Freedom',cadence:'daily'},{id:'CH004',name:'Write a Daily Journal',emoji:'📓',tag:'Reflect',cadence:'daily'}]},{icon:'🗺️',name:'The Cartography Room of Skeinfall',flavor:'A map-lined study where the practitioners of the Peaks plan their responses to predictable obstacles before those obstacles arrive.',lore:"Skeinfall's room is covered in hand-drawn maps — not of terrain, but of intention: if-then routes for the moments the will is weakest, the schedule is broken, and the default behavior waits to take over. The Peaks' planners found that travelers who mapped these moments in advance navigated them differently.",habits:[{id:'CH090',name:'Use If-Then Planning to Boost Success',emoji:'🗺️',tag:'Strategy',cadence:'daily'},{id:'CH074',name:'Stack Skills for Unique Advantage',emoji:'🧩',tag:'Strategy',cadence:'weekly'},{id:'CH103',name:'Practice Dual N-Back or Working Memory Training',emoji:'🎮',tag:'Cognition',cadence:'daily'}]},{icon:'✨',name:'The Gratitude Tower of Aelspire',flavor:'The highest permanently inhabited point in the Skein Peaks, used exclusively for the practice of naming what is good.',lore:"Aelspire's tower was built last of all the Peaks' structures, by a community that had spent fifty years developing practices around difficulty and had finally noticed they had built nothing for the acknowledgement of goodness. The tower corrects this. The view from it is the widest in the Realm.",habits:[{id:'CH023',name:'Cultivate Gratitude',emoji:'✨',tag:'Heart',cadence:'daily'},{id:'CH088',name:'Release Your Worries',emoji:'🕊️',tag:'Freedom',cadence:'daily'},{id:'CH081',name:'Master Your Life Wheel',emoji:'☯️',tag:'Map',cadence:'weekly'}]},{icon:'🏅',name:'The Achievement Registry at Vaeln',flavor:'A public hall where practitioners record and display completed habits, one by one, for themselves and each other.',lore:"The Registry began as a private practice — a single traveler who needed to see their progress made visible. The Peaks' researchers subsequently documented what the traveler had intuited: the brain does not automatically register progress. It requires evidence. The Registry is the evidence.",habits:[{id:'CH092',name:'Record and Display Your Daily Achievements',emoji:'🏅',tag:'Pride',cadence:'daily'},{id:'CH074',name:'Stack Skills for Unique Advantage',emoji:'🧩',tag:'Strategy',cadence:'weekly'},{id:'CH104',name:'Learn One Practical Skill Per Month',emoji:'🛠️',tag:'Growth',cadence:'weekly'}]}]},
+{id:'irongate',name:'The Irongate Vale',icon:'🏛️',tagline:'A walled valley where attention is the only resource that matters',description:"The Irongate Vale is a narrow valley sealed at both ends by enormous iron gates — the only territory in the Realm with controlled entry. This is not hostility. It is policy. The Vale's founders understood that the practices cultivated here are incompatible with constant interruption, and they designed the territory's access accordingly. Inside the gates, the architecture is severe and beautiful: stone buildings with no ornamentation, deep-set windows that minimize peripheral distraction, and streets wide enough for two people to pass without touching.",expect:"The Irongate Vale is the most demanding territory in the Realm, not physically but attentionally. Travelers who enter expecting relaxation misunderstand the place. The Vale asks for sustained, voluntary, deliberate single-pointed focus — the most difficult thing a distracted modern person can offer. Those who stay long enough to rebuild this capacity leave with something that feels like a superpower from the outside and like basic functioning from the inside.",color:'#7a9fff',glow:'rgba(122,159,255,0.3)',spots:[{icon:'🎯',name:'The Scriptorium of Aethen',flavor:'A writing hall with one desk per traveler, one task per session, and walls built to prevent awareness of anything outside.',lore:"Aethen's Scriptorium was designed by an architect who had studied the conditions under which deep work actually occurs. She found three requirements: a single defined task, the physical impossibility of switching to another, and walls thick enough to prevent the intrusion of the outside world's sounds.",habits:[{id:'CH073',name:'Embrace Single-Tab Focus for Sharper Thinking',emoji:'🎯',tag:'Focus',cadence:'daily'},{id:'CH075',name:'Silence Notifications to Unlock Deep Work',emoji:'🔕',tag:'Focus',cadence:'daily'},{id:'CH083',name:'Activate Gray Mode on Your Phone',emoji:'📱',tag:'Trick',cadence:'daily'}]},{icon:'🔕',name:'The Signal Vault of Drevoth',flavor:'A sealed chamber where devices are collected at entry and returned at exit — no exceptions.',lore:"Drevoth's Vault operates on a single rule that requires no explanation, no justification, and no negotiation. Devices go in the basket. The basket is sealed. The traveler works. The basket is opened when the session ends. Travelers who have been using the Vault for years report that they now find the basket's closure a relief rather than a deprivation.",habits:[{id:'CH075',name:'Silence Notifications to Unlock Deep Work',emoji:'🔕',tag:'Focus',cadence:'daily'},{id:'CH073',name:'Embrace Single-Tab Focus for Sharper Thinking',emoji:'🎯',tag:'Focus',cadence:'daily'},{id:'CH102',name:'Practice Deliberate Recall After Learning',emoji:'🧠',tag:'Cognition',cadence:'daily'}]},{icon:'📱',name:'The Recalibration Workshop of Velmoth',flavor:'A small workshop where practitioners learn to configure their devices as tools rather than compulsions.',lore:"Velmoth's workshop does not confiscate devices. It teaches travelers to modify them: gray mode to remove the dopamine trigger of color, notifications silenced categorically, screen distance corrected. The Vale's engineers found that small friction applied to device use has effects disproportionate to the size of the intervention.",habits:[{id:'CH083',name:'Activate Gray Mode on Your Phone',emoji:'📱',tag:'Trick',cadence:'daily'},{id:'CH084',name:'Maintain Optimal Screen Distance',emoji:'👁️',tag:'Guard',cadence:'daily'},{id:'CH126',name:"Speak Up Once When You'd Normally Stay Silent",emoji:'🗣️',tag:'Courage',cadence:'daily'}]},{icon:'🌙',name:'The Evening Gate of Solhaven',flavor:"A second gatehouse that marks the boundary of the Vale's screen-free evening hours.",lore:"Solhaven's gate closes at the same hour every evening. Past it, no screens, no news, no notifications. The gate was controversial when it was introduced — many Vale residents objected. Within three months, those same residents were its most vocal defenders. The evenings behind the gate were, they reported, their own again.",habits:[{id:'CH071',name:'Embrace Screen-Free Evenings for Better Well-Being',emoji:'🌙',tag:'Boundary',cadence:'daily'},{id:'CH003',name:'Keep Your Phone Out of Bed',emoji:'📵',tag:'Boundary',cadence:'daily'},{id:'CH085',name:'Swap News for Audiobook',emoji:'🎧',tag:'Upgrade',cadence:'daily'}]},{icon:'☕',name:'The Afternoon Post at Aelveth',flavor:"A checkpoint at the Vale's central thoroughfare, staffed from noon — after which caffeine, naps, and evening exercise are redirected.",lore:"The Post was established after the Vale's researchers documented what its practitioners already suspected: that afternoon caffeine, long naps, and vigorous evening exercise each eroded the sleep architecture that made the next day's focus possible.",habits:[{id:'CH038',name:'Eliminate Afternoon Caffeine for Better Sleep',emoji:'☕',tag:'Guard',cadence:'daily'},{id:'CH033',name:'Avoid Afternoon Naps to Preserve Nighttime Sleep',emoji:'⛔',tag:'Guard',cadence:'daily'},{id:'CH048',name:'Avoid Vigorous Exercise Before Bed',emoji:'🚫',tag:'Guard',cadence:'daily'}]},{icon:'🎧',name:'The Listening Alcove of Thornveth',flavor:'A curved stone reading nook engineered for a single audio source — no visual media, no multitasking.',lore:"Thornveth's alcove replaced the Vale's news reading room two generations ago. The change was made after tracking showed that practitioners who replaced morning news with intentional audio had measurably better focus through the afternoon.",habits:[{id:'CH085',name:'Swap News for Audiobook',emoji:'🎧',tag:'Upgrade',cadence:'daily'},{id:'CH084',name:'Maintain Optimal Screen Distance',emoji:'👁️',tag:'Guard',cadence:'daily'},{id:'CH003',name:'Keep Your Phone Out of Bed',emoji:'📵',tag:'Boundary',cadence:'daily'}]}]},
+{id:'vastrun',name:'The Vastrun Steppe',icon:'🏃',tagline:'An open expanse where the heart and lungs are trained for decades, not seasons',description:"The Vastrun Steppe is the Realm's largest unbroken territory — a vast, wind-scoured grassland that runs from the eastern mountains to the sea. Its horizons are extraordinary: you can see weather forming from forty kilometers away, and the sky at night contains more stars than any other territory by a significant margin. The Steppe has no mountains, no significant trees, and no shelter from the wind. Its paths run for extraordinary distances without landmark or interruption — which is, the Steppe's people will tell you, entirely the point.",expect:"The Vastrun Steppe trains the body's engine. Not for size, not for speed, not for single-session performance — for sustained, multi-decade cardiovascular capacity that determines quality and length of life more than almost any other factor. Travelers who arrive expecting dramatic sessions will be redirected toward Zone 2 work: the unheroic, conversational, sustainable pace that most people find initially boring and eventually addictive. The Steppe's culture is anti-intensity. It is pro-longevity. The difference, its practitioners insist, is everything.",color:'#f07050',glow:'rgba(240,112,80,0.3)',spots:[{icon:'💚',name:'The Zone 2 Trails of Selveth',flavor:'A network of marked grass paths calibrated to Zone 2 heart rate — the pace of conversation, the pace of adaptation.',lore:"Selveth's trails are marked not by distance but by perceived exertion. The markers read: can you speak a full sentence without pausing for breath? Good. Continue. Those who follow them at the right pace, three times a week, return in months with a resting heart rate that tells a different story than the one they arrived with.",habits:[{id:'CH093',name:'Train in Zone 2 Cardio for 30+ Minutes',emoji:'💚',tag:'Endurance',cadence:'weekly'},{id:'CH111',name:'Practice Nasal Breathing During Exercise',emoji:'👃',tag:'Breath',cadence:'daily'},{id:'CH046',name:'Set a Step Goal to Boost Health',emoji:'👟',tag:'Volume',cadence:'daily'}]},{icon:'🎒',name:'The Rucking Road of Aelvast',flavor:'A long straight road used by Steppe travelers carrying weighted packs in every weather.',lore:"The Rucking Road has no start and no finish that anyone has ever agreed on. Travelers join it wherever they are and leave it when their session ends. The Steppe's practitioners discovered rucking independently — they simply noticed that the farmers who carried loads over distance were, as a group, extraordinarily healthy into old age.",habits:[{id:'CH099',name:'Practice Rucking (Weighted Walking)',emoji:'🎒',tag:'Loaded',cadence:'weekly'},{id:'CH093',name:'Train in Zone 2 Cardio for 30+ Minutes',emoji:'💚',tag:'Endurance',cadence:'weekly'},{id:'CH109',name:'Do 5 Minutes of Vigorous Activity (VILPA)',emoji:'⚡',tag:'Burst',cadence:'daily'}]},{icon:'⚡',name:'The VILPA Square at Dunvast',flavor:'A small public plaza where the tradition of brief all-out effort has been practiced daily for a generation.',lore:"Dunvast's square was originally a market. A local physician began using it to demonstrate brief vigorous exercise to patients who said they had no time for training. Five minutes. All-out. Once daily. The mortality data that arrived from larger studies a decade later confirmed what the physician had observed: the fragments count.",habits:[{id:'CH109',name:'Do 5 Minutes of Vigorous Activity (VILPA)',emoji:'⚡',tag:'Burst',cadence:'daily'},{id:'CH062',name:'Build Consistency With 4+ Workouts a Week',emoji:'📆',tag:'Anchor',cadence:'weekly'},{id:'CH093',name:'Train in Zone 2 Cardio for 30+ Minutes',emoji:'💚',tag:'Endurance',cadence:'weekly'}]},{icon:'👃',name:'The Nasal Breathing Lodge at Korrvast',flavor:'A training lodge with a single posted rule: the mouth stays closed for the duration of every session.',lore:"Korrvast's lodge was built by a practitioner who had spent three years unable to train at altitude due to respiratory limitations. The nasal breathing protocols she developed during that period produced results that outlasted the original problem — a lower resting respiratory rate, higher CO2 tolerance, and an exercise efficiency that her training partners found difficult to explain.",habits:[{id:'CH111',name:'Practice Nasal Breathing During Exercise',emoji:'👃',tag:'Breath',cadence:'daily'},{id:'CH055',name:'Boost Lung Capacity with Short Breath Holds',emoji:'🫁',tag:'Breath',cadence:'daily'},{id:'CH068',name:'Harness the Power of Deep Belly Breathing',emoji:'🌬️',tag:'Root',cadence:'daily'}]},{icon:'💓',name:'The Watchtower of Relvast',flavor:"A stone tower at the Steppe's center where travelers record their resting heart rate every week and nothing else.",lore:"The Watchtower was built to see weather coming. The weekly resting heart rate ritual developed because the practitioners who climbed it every week began bringing small notebooks. The patterns that emerged over years of weekly measurement turned out to be the clearest picture of cardiovascular adaptation available.",habits:[{id:'CH110',name:'Track Resting Heart Rate',emoji:'💓',tag:'Biomarker',cadence:'weekly'},{id:'CH093',name:'Train in Zone 2 Cardio for 30+ Minutes',emoji:'💚',tag:'Endurance',cadence:'weekly'},{id:'CH050',name:'Track Progress with Regular Self-Weighing',emoji:'⚖️',tag:'Data',cadence:'weekly'}]},{icon:'🧖',name:"The Sauna Lodge at Haelrun's Ford",flavor:"A cedar-lined sauna built at the Steppe's only river crossing, used as mandatory recovery infrastructure.",lore:"Haelrun's Ford was the Steppe's first permanent river crossing. The sauna was built alongside it because long-distance travelers arrived cold, tight, and inflamed. Two sessions a week in the cedar lodge changed recovery speed, sleep quality, and the frequency of illness in ways that impressed even the Steppe's most data-focused practitioners.",habits:[{id:'CH112',name:'Do a Weekly Sauna Session',emoji:'🧖',tag:'Heat',cadence:'weekly'},{id:'CH028',name:'Enhance Muscle Recovery with Foam Rolling',emoji:'🪵',tag:'Restore',cadence:'daily'},{id:'CH059',name:'Supplement With Omega-3 for Heart Health',emoji:'🐟',tag:'Elixir',cadence:'daily'}]}]},
+{id:'ember',name:'The Ember Shore',icon:'🏡',tagline:'A warm coastal territory where connection and contribution are practiced as seriously as any physical habit',description:"The Ember Shore runs along a gentle south-facing coastline whose waters never fully cool. The settlements here are built around communal fire pits — the ember pits that give the territory its name — which burn through every night and around which most of the Shore's social life unfolds. The architecture is open and oriented outward: large shared halls, covered walkways connecting households, kitchens designed for groups rather than individuals. The air smells of woodsmoke and salt.",expect:"The Ember Shore is the Realm's most socially demanding territory, in the best sense. Its practitioners take connection seriously — not as a peripheral benefit of a healthy life but as a primary driver of it. The research the Shore has accumulated over generations is unambiguous: loneliness is as harmful as smoking, and meaningful social contact has measurable effects on immunity, cognition, cardiovascular health, and longevity.",color:'#e8884a',glow:'rgba(232,136,74,0.3)',spots:[{icon:'📞',name:'The No-Agenda House at Vaelshore',flavor:'A small meeting room reserved exclusively for visits and messages with no task, no request, and no outcome to manage.',lore:"Vaelshore's house began as a single practitioner's experiment: one call a week, to one person, with nothing to ask and nothing to offer except attention. The health effects documented over a decade were disproportionate to the intervention's apparent simplicity.",habits:[{id:'CH120',name:'Call or Message One Friend With No Agenda',emoji:'📞',tag:'Connection',cadence:'weekly'},{id:'CH064',name:'Practice Random Acts of Kindness',emoji:'🤝',tag:'Gift',cadence:'daily'},{id:'CH108',name:'Practice Loving-Kindness Meditation',emoji:'💛',tag:'Empathy',cadence:'daily'}]},{icon:'🌍',name:'The Contribution Hall of Solemvar',flavor:"The Shore's largest gathering space, where collective projects and volunteering are organized around the central fire.",lore:"Solemvar's hall has hosted every collective project the Ember Shore has ever attempted. Its practitioners discovered what purpose researchers confirmed: that contributing to something larger than the self activates reward systems that purely self-focused practices cannot reach.",habits:[{id:'CH121',name:'Volunteer or Contribute to Something Larger',emoji:'🌍',tag:'Purpose',cadence:'weekly'},{id:'CH064',name:'Practice Random Acts of Kindness',emoji:'🤝',tag:'Gift',cadence:'daily'},{id:'CH120',name:'Call or Message One Friend With No Agenda',emoji:'📞',tag:'Connection',cadence:'weekly'}]},{icon:'💛',name:'The Loving-Kindness Corner at Aelnvar',flavor:'A quiet alcove at the edge of the central hall, reserved for a meditation practice that begins with the self and expands outward.',lore:"Aelnvar's corner is the Shore's most private public space — open but sheltered, visible but quiet. The loving-kindness practice it houses is deceptively simple: wish well to yourself, then to someone you love, then to someone neutral, then to someone difficult.",habits:[{id:'CH108',name:'Practice Loving-Kindness Meditation',emoji:'💛',tag:'Empathy',cadence:'daily'},{id:'CH023',name:'Cultivate Gratitude',emoji:'✨',tag:'Heart',cadence:'daily'},{id:'CH064',name:'Practice Random Acts of Kindness',emoji:'🤝',tag:'Gift',cadence:'daily'}]},{icon:'🌌',name:'The Awe Pavilion at Cape Velmourn',flavor:"An open-roofed structure at the Shore's most exposed headland, where the sky and sea are equally enormous.",lore:"The pavilion at Velmourn has no walls and no roof. Its benches are oriented to maximize the experience of scale. The Shore's researchers documented awe as a distinct physiological state with measurable effects on cortisol and inflammatory markers.",habits:[{id:'CH106',name:'Do a Weekly Awe Walk',emoji:'🌌',tag:'Wonder',cadence:'weekly'},{id:'CH010',name:'Take a Mindful Walk Without Your Phone',emoji:'🚶',tag:'Presence',cadence:'daily'},{id:'CH023',name:'Cultivate Gratitude',emoji:'✨',tag:'Heart',cadence:'daily'}]},{icon:'😮‍💨',name:'The Sigh Stone of Vaethmoor',flavor:'A carved coastal stone with a single instruction: breathe in twice, then breathe out slowly.',lore:"The Sigh Stone was placed by a Shore physician after she encountered Stanford research on the physiological sigh — the double nasal inhale followed by a long exhale — and found it the fastest real-time stress reset she had ever documented.",habits:[{id:'CH105',name:'Practice the Physiological Sigh When Stressed',emoji:'😮‍💨',tag:'Reset',cadence:'daily'},{id:'CH107',name:'Keep a Worry Window (Scheduled Worry Time)',emoji:'🪟',tag:'Contain',cadence:'daily'},{id:'CH087',name:'Name Your Emotions Clearly',emoji:'🗣️',tag:'Clarity',cadence:'daily'}]},{icon:'🗣️',name:'The Courage Hearth at Delvorn',flavor:"A fireside gathering where the Shore's oldest tradition demands that the unsaid be spoken.",lore:"Delvorn's hearth was the first ember pit on the Shore. The tradition it houses is the Shore's most demanding: once a day, say the thing you would normally leave unsaid. In a real context, with real consequences, with real other people.",habits:[{id:'CH126',name:"Speak Up Once When You'd Normally Stay Silent",emoji:'🗣️',tag:'Courage',cadence:'daily'},{id:'CH125',name:'Do One Uncomfortable Thing Intentionally',emoji:'🔥',tag:'Resilience',cadence:'weekly'},{id:'CH120',name:'Call or Message One Friend With No Agenda',emoji:'📞',tag:'Connection',cadence:'weekly'}]}]},
+{id:'foundry',name:'The Foundry Reach',icon:'🧍',tagline:"A rugged coastal headland where the body's structure is treated as a lifelong architectural project",description:"The Foundry Reach occupies a dramatic headland of wind-shaped stone and salt-stunted trees between the Tidal Hollows and the Ember Shore. The coastline here is all right angles — flat-topped cliffs dropping sheer to the sea, the stone fractured into natural platforms and ledges at irregular heights. The wind is constant and comes from multiple directions, which means every outdoor practice here includes an element of balance work that other territories do not require.",expect:"The Foundry Reach works on the body's foundations — not the muscles that are easiest to build or most visible in mirrors, but the structures that determine whether those muscles can be used safely and for decades: hip mobility, thoracic extension, grip, single-leg stability, and posterior chain integrity. Travelers who arrive from the Ashveld often discover that their foundations have not kept pace with their surface strength.",color:'#a0c878',glow:'rgba(160,200,120,0.3)',spots:[{icon:'⚖️',name:'The Posture Mirrors of Holvane',flavor:"A series of angled mirrors installed at the midpoints of every major walkway in the Reach's central settlement.",lore:"The mirrors at Holvane were installed not as vanity but as intervention. The Reach's founders observed that posture corrected when seen corrected immediately — that the delay between awareness and action was the primary obstacle. By placing mirrors at the natural midpoints of movement, they made the correction involuntary.",habits:[{id:'CH122',name:'Set a Posture Check Alarm Every Hour',emoji:'⏰',tag:'Awareness',cadence:'daily'},{id:'CH124',name:'Do Chin Tucks Throughout the Day',emoji:'🧱',tag:'Posture',cadence:'daily'},{id:'CH031',name:'Take a Stretch Break',emoji:'🧩',tag:'Reset',cadence:'daily'}]},{icon:'🪽',name:'The Wall Angel Terrace at Greyvane',flavor:'A bare stone terrace with a single marked wall — used daily by every Reach resident for thoracic restoration.',lore:"Greyvane's terrace is the first thing Reach residents do every morning before anything else. Arms raised, backs against the stone, sliding upward against resistance that the thoracic spine has forgotten how to provide. The movement was brought to the Reach by a traveler who had spent years undoing a decade of desk posture.",habits:[{id:'CH123',name:'Practice the Wall Angel Exercise',emoji:'🪽',tag:'Thoracic',cadence:'daily'},{id:'CH122',name:'Set a Posture Check Alarm Every Hour',emoji:'⏰',tag:'Awareness',cadence:'daily'},{id:'CH124',name:'Do Chin Tucks Throughout the Day',emoji:'🧱',tag:'Posture',cadence:'daily'}]},{icon:'🤜',name:'The Grip Room at Drevhollow',flavor:'A chamber of iron bars at varying diameters, dedicated entirely to hand and forearm development.',lore:"Drevhollow's room was added after a decade of longevity data arrived from the Realm's research centers, all pointing in the same direction: grip strength predicts healthspan with a consistency that most other biomarkers cannot match. The bars are cold and unforgiving. The practitioners who use them daily are, as a group, extraordinarily healthy.",habits:[{id:'CH095',name:'Train Grip Strength Intentionally',emoji:'🤜',tag:'Longevity',cadence:'weekly'},{id:'CH094',name:'Practice Dead Hangs for Shoulder Health',emoji:'🙌',tag:'Decompress',cadence:'daily'},{id:'CH098',name:'Add a Loaded Carry to Your Workout',emoji:'🪣',tag:'Functional',cadence:'weekly'}]},{icon:'🦶',name:'The Balance Platform at Velsheer',flavor:"A raised wooden disc at the cliff's edge, used for single-leg training with the sea forty meters below.",lore:"Velsheer's platform was built at a point where the wind is reliably inconsistent — the position requires constant micro-adjustment that flat-ground balance work does not. Thirty seconds per side, eyes open, wind variable. The Reach's researchers found this location produced faster balance adaptation than any indoor equivalent.",habits:[{id:'CH097',name:'Practice Single-Leg Balance Training Daily',emoji:'🦶',tag:'Longevity',cadence:'daily'},{id:'CH094',name:'Practice Dead Hangs for Shoulder Health',emoji:'🙌',tag:'Decompress',cadence:'daily'},{id:'CH029',name:'Improve Strength and Balance with Lunges',emoji:'🦵',tag:'Lower',cadence:'daily'}]},{icon:'🌀',name:"The Hip Mobility Courtyard at Solvane's Rest",flavor:'A wide flagstone courtyard used exclusively for hip mobility work, morning and evening.',lore:"Solvane was the Reach's founding practitioner — a former long-distance runner who arrived with hip flexors shortened by a decade of training. The courtyard she built is simple: a flat stone floor, no equipment, and chalk outlines of every position the hip joint can reach in full health.",habits:[{id:'CH096',name:'Do a Daily Hip Flexor Stretch',emoji:'🌀',tag:'Mobility',cadence:'daily'},{id:'CH101',name:'Do a Daily Hip Mobility Routine',emoji:'⭕',tag:'Range',cadence:'daily'},{id:'CH056',name:'Unlock the Benefits of Yoga Flow',emoji:'🧘',tag:'Flow',cadence:'weekly'}]},{icon:'🏗️',name:'The Posterior Chain Foundry at Ironcleft',flavor:'A sea-cave training station dedicated entirely to the muscles that face away from the mirror.',lore:"Ironcleft's cave is accessible only from below, via a fixed rope climb — which means that the approach itself trains part of what is practiced inside. The Reach's practitioners say the posterior chain is the body's most important and most neglected architecture. Ironcleft addresses the neglect directly.",habits:[{id:'CH100',name:'Strengthen Your Posterior Chain Weekly',emoji:'🏗️',tag:'Posterior',cadence:'weekly'},{id:'CH098',name:'Add a Loaded Carry to Your Workout',emoji:'🪣',tag:'Functional',cadence:'weekly'},{id:'CH095',name:'Train Grip Strength Intentionally',emoji:'🤜',tag:'Longevity',cadence:'weekly'}]}]},
+];
+
+const container=document.getElementById('regions-container');
+regions.forEach(r=>{
+  const card=document.createElement('div');
+  card.className='region-card';
+  card.style.setProperty('--rc',r.color);
+  card.style.setProperty('--rc-glow',r.glow);
+  const totalHabits=new Set(r.spots.flatMap(s=>s.habits.map(h=>h.id))).size;
+  card.innerHTML=`<div class="card-stripe"></div><div class="card-body"><div class="card-icon">${r.icon}</div><div class="card-name">${r.name}</div><div class="card-tagline">${r.tagline}</div><div class="card-count">⬡ ${r.spots.length} LOCATIONS · ${totalHabits} HABITS</div><div class="card-preview">${r.spots.slice(0,3).map(s=>s.name).join(' · ')}…</div><button class="card-enter">ENTER TERRITORY →</button></div>`;
+  card.querySelector('.card-enter').addEventListener('click',()=>openRegion(r));
+  container.appendChild(card);
+});
+
+function openRegionById(id){const r=regions.find(x=>x.id===id);if(r)openRegion(r);}
+
+function openRegion(r){
+  const rv=document.getElementById('region-view');
+  const ri=document.getElementById('region-view-inner');
+  rv.style.display='block';
+  rv.style.setProperty('--rc',r.color);
+  ri.innerHTML=`<button class="back-btn" onclick="closeRegion()">← WORLD MAP</button><div class="region-detail-icon">${r.icon}</div><div class="region-detail-name">${r.name}</div><div class="region-detail-tagline" style="color:${r.color}">${r.tagline}</div><div class="region-lore-box"><div class="region-description">${r.description}</div></div><div class="region-expect"><span class="region-expect-label">WHAT TRAVELERS CAN EXPECT</span>${r.expect}</div><div class="spots-heading">${r.spots.length} LOCATIONS — SELECT TO UNLOCK HABITS</div><div class="spots-grid">${r.spots.map((s,i)=>`<div class="spot-card" onclick="openSpot('${r.id}',${i})"><div class="spot-top"><div class="spot-icon">${s.icon}</div><div class="spot-name">${s.name}</div><div class="spot-flavor">${s.flavor}</div></div><div class="spot-habits">${s.habits.map(h=>`<div class="spot-habit-row"><div class="spot-habit-emoji">${h.emoji}</div><div class="spot-habit-name">${h.name}</div><span class="spot-cadence-pill cadence-${h.cadence}">${h.cadence}</span></div>`).join('')}</div></div>`).join('')}</div>`;
+  rv.scrollTop=0;
+}
+function closeRegion(){document.getElementById('region-view').style.display='none';}
+
+function openSpot(regionId,spotIndex){
+  const r=regions.find(x=>x.id===regionId);
+  const s=r.spots[spotIndex];
+  const sv=document.getElementById('spot-view');
+  const si=document.getElementById('spot-view-inner');
+  sv.style.display='block';
+  sv.style.setProperty('--rc',r.color);
+  si.innerHTML=`<button class="spot-back-btn" onclick="closeSpot()">← ${r.name}</button><div class="spot-detail-icon">${s.icon}</div><div class="spot-detail-name">${s.name}</div><div class="spot-detail-region" style="color:${r.color}">${r.icon} ${r.name.toUpperCase()}</div><div class="spot-detail-lore">${s.lore}</div><div class="habits-unlock-heading">HABITS UNLOCKED AT THIS LOCATION</div><div class="unlock-habits">${s.habits.map(h=>`<div class="unlock-habit"><div class="unlock-emoji">${h.emoji}</div><div class="unlock-info"><div class="unlock-name">${h.name}</div><div class="unlock-meta"><span class="unlock-id">${h.id}</span><span class="spot-cadence-pill cadence-${h.cadence}">${h.cadence}</span></div></div><div class="unlock-badge">${h.tag}</div></div>`).join('')}</div>`;
+  sv.scrollTop=0;
+}
+function closeSpot(){document.getElementById('spot-view').style.display='none';}
+</script>
 </body>
 </html>
